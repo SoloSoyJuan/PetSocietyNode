@@ -1,10 +1,11 @@
 import express, {Express, Request, Response} from 'express';
 import dotenv from 'dotenv';
+import { db } from './lib/connectionDB';
 
 // Load environment variables
 dotenv.config();
 const app: Express = express();
-const port: number =  process.env.PORT as any || 4000;
+const port: number =  process.env.PORT as any || 3000;
 
 // Middlewares
 app.use(express.json());
@@ -25,6 +26,10 @@ app.get('/notfound',(req: Request, res: Response)=>{
 });
 
 
-app.listen(port, ()=>{
-    console.log(`server is running on port: ${port}`);
-})
+db.then( ()=>{
+    
+    app.listen(port, ()=>{
+        console.log(`server is running on port: ${port}`);
+    });
+    
+});
