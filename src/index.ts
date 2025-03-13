@@ -1,6 +1,7 @@
 import express, {Express, Request, Response} from 'express';
 import dotenv from 'dotenv';
 import { db } from './lib/connectionDB';
+import { userRouter } from './routes';
 
 // Load environment variables
 dotenv.config();
@@ -24,6 +25,8 @@ app.get('/error',(req: Request, res: Response)=>{
 app.get('/notfound',(req: Request, res: Response)=>{
     res.status(404).send("Hello world!!");
 });
+
+app.use("/user", userRouter);
 
 
 db.then( ()=>{
