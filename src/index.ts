@@ -16,21 +16,26 @@ app.get('/',(req: Request, res: Response)=>{
     res.send("Hello world!!");
 });
 
-// pagina de error
+// error
 app.get('/error',(req: Request, res: Response)=>{
     res.status(500).send("Hello world!!");
 });
 
-// pagina de not found
+// not found
 app.get('/notfound',(req: Request, res: Response)=>{
     res.status(404).send("Hello world!!");
 });
 
+// Routes
 app.use("/user", userRouter);
+/** /
+app.use("/pets", petRouter);
+app.use("/medical-records", medicalRecordRouter);
+app.use("/appointments", appointmentRouter);
+/**/
 
 
 db.then( ()=>{
-    
     app.listen(port, ()=>{
         console.log(`server is running on port: ${port}`);
     });

@@ -64,8 +64,10 @@ class UserServices {
                 throw new ReferenceError('User not found');
             }
 
+            userInput.password = user.password;
+
             const userUpdate: UserDocument | null = await UserModel.findByIdAndUpdate(id, userInput, { new: true });
-            //user.password = "";
+            
             return userUpdate;
 
         } catch (error) {
