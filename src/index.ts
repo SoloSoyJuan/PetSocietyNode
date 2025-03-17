@@ -1,7 +1,7 @@
 import express, {Express, Request, Response} from 'express';
 import dotenv from 'dotenv';
 import { db } from './lib/connectionDB';
-import { userRouter } from './routes';
+import { petsRouter, userRouter } from './routes';
 
 // Load environment variables
 dotenv.config();
@@ -28,6 +28,7 @@ app.get('/notfound',(req: Request, res: Response)=>{
 
 // Routes
 app.use("/user", userRouter);
+app.use("/pets", petsRouter);
 /** /
 app.use("/pets", petRouter);
 app.use("/medical-records", medicalRecordRouter);
