@@ -1,18 +1,18 @@
-// controllers/mascota.controller.ts
+// controllers/pets.controller.ts
 
 import { Request, Response } from "express";
-import { mascotaService } from "../services";
-import { MascotaInput, MascotaInputUpdate } from "../interfaces";
+import { petsService } from "../services";
+import { petsInput, petsInputUpdate } from "../interfaces";
 
-class MascotaController {
+class PetsController {
   public async getAll(req: Request, res: Response): Promise<void> {
     try {
-      const mascotas = await mascotaService.getAll();
-      res.status(200).json(mascotas);
+      const petss = await petsService.getAll();
+      res.status(200).json(petss);
     } catch (error) {
-      // If it's a ReferenceError (like "No mascotas found")
+      // If it's a ReferenceError (like "No petss found")
       if (error instanceof ReferenceError) {
-        res.status(500).json({ message: "No mascotas found" });
+        res.status(500).json({ message: "No petss found" });
         return;
       }
       res.status(500).json({ message: error });
@@ -21,12 +21,12 @@ class MascotaController {
 
   public async create(req: Request, res: Response): Promise<void> {
     try {
-      const newMascota = await mascotaService.create(req.body as MascotaInput);
+      const newpets = await petsService.create(req.body as petsInput);
       // Return the created document
-      res.status(201).json(newMascota);
+      res.status(201).json(newpets);
     } catch (error) {
       if (error instanceof ReferenceError) {
-        res.status(400).json({ message: "Mascota already exists" });
+        res.status(400).json({ message: "pets already exists" });
         return;
       }
       res.status(500).json({ message: error });
@@ -36,11 +36,11 @@ class MascotaController {
   public async getById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const mascota = await mascotaService.getById(id);
-      res.status(200).json(mascota);
+      const pets = await petsService.getById(id);
+      res.status(200).json(pets);
     } catch (error) {
       if (error instanceof ReferenceError) {
-        res.status(500).json({ message: "Mascota not found" });
+        res.status(500).json({ message: "pets not found" });
         return;
       }
       res.status(500).json({ message: error });
@@ -50,16 +50,16 @@ class MascotaController {
   public async update(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const updatedMascota = await mascotaService.update(
+      const updatedpets = await petsService.update(
         id,
-        req.body as MascotaInputUpdate
+        req.body as petsInputUpdate
       );
-      res.status(200).json(updatedMascota);
+      res.status(200).json(updatedpets);
     } catch (error) {
       if (error instanceof ReferenceError) {
         res
           .status(500)
-          .json({ message: `Mascota with id ${req.params.id} not found` });
+          .json({ message: `pets with id ${req.params.id} not found` });
         return;
       }
       res.status(500).json({ message: error });
@@ -69,13 +69,13 @@ class MascotaController {
   public async delete(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const mascotaDeleted = await mascotaService.delete(id);
-      res.status(200).json(mascotaDeleted);
+      const petsDeleted = await petsService.delete(id);
+      res.status(200).json(petsDeleted);
     } catch (error) {
       if (error instanceof ReferenceError) {
         res
           .status(500)
-          .json({ message: `Mascota with id ${req.params.id} not found` });
+          .json({ message: `pets with id ${req.params.id} not found` });
         return;
       }
       res.status(500).json({ message: error });
@@ -83,6 +83,6 @@ class MascotaController {
   }
 }
 
-export const mascotaController = new MascotaController();
+export const petsController = new PetsController();
 
 
