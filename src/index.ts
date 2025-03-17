@@ -27,7 +27,7 @@ app.get('/notfound',(req: Request, res: Response)=>{
 });
 
 // Routes
-app.use("/user", userRouter);
+app.use("/users", userRouter);
 /** /
 app.use("/pets", petRouter);
 app.use("/medical-records", medicalRecordRouter);

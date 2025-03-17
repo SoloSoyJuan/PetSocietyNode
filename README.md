@@ -1,5 +1,5 @@
 
-# Pet Society
+# Pet Society (API Backend)
 
 ## Descripción
 Algunas veterinarias gestionan su información de una manera manual o con sistemas cerrados y de difícil acceso a información relevante para los dueños de las mascotas, Con **Pet Society** estos problemas se solucionan. **Pet Society** es un software para gestionar las citas, historias medias y pacientes de una veterinaria, de igual manera le permite a los dueños de mascotas, acceder a las historias clínicas, sin necesidad de generar mas tareas al personal.
@@ -33,6 +33,8 @@ Las historias clínicas tienen relación con una cita, una mascota y un Veterina
 - `GET /users/{id}` → Obtener un usuario por ID
 - `PUT /users/{id}` → Actualizar un usuario
 - `DELETE /users/{id}` → Eliminar un usuario
+- `POST /users/login` → Login de los usuarios
+- `POST /users/logout` → Logout de los usuarios
 #### Mascotas
 - `POST /pets` → Crear una mascota _(Solo Admin y Vet)_
 - `GET /pets` → Obtener todas las mascotas
