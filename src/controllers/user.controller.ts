@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { UserInput, UserLogin } from "../interfaces";
 import { userServices } from "../services";
+import { AuthError } from '../exceptions';
 
 class UserController {
     public async getAll(req: Request, res: Response): Promise<void> {
@@ -71,6 +72,26 @@ class UserController {
             res.status(500).json({message: error});
             
         }
+    }
+
+    public async login (req: Request, res: Response) {
+        try {
+            
+            const resObj = await userServices.login(req.body as UserLogin);
+            res.status(200).json(resObj);
+
+        } catch (error) {
+            
+            if (error instanceof AuthError) {
+                res.status(401).json({message: "Not authorized"});
+                return;
+            }
+            res.status(500).json(error);
+        }
+    }
+
+    public async logout (req: Request, res: Response) {
+    
     }
 }
 

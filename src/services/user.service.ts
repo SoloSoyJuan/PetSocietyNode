@@ -2,6 +2,7 @@ import bycript from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserDocument, UserModel } from "../models";
 import { UserInputUpdate, UserInput, UserLogin, UserLoginResponse } from "../interfaces";
+import { AuthError } from '../exceptions';
 
 class UserServices {
 
@@ -85,6 +86,48 @@ class UserServices {
 
             const userDelete: UserDocument | null = await UserModel.findByIdAndDelete(id);
             return userDelete;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+    public async login (userLogin: UserLogin): Promise<UserLoginResponse | null> {
+        try {
+            const userExist: UserDocument | null = await this.getByEmail(userLogin.email);
+            if (userExist === null) {
+                throw new AuthError("Not Authorized");
+            }
+
+            const isMatch: boolean = await bycript.compare(userLogin.password, userExist.password);
+
+            if (!isMatch) {
+                throw new AuthError("Not Authorized");
+            }
+
+            return {
+                user: {
+                    id: userExist.id,
+                    name: userExist.name,
+                    lastname: userExist.lastname,
+                    address: userExist.address,
+                    phone: userExist.phone,
+                    email: userExist.email,
+                    roles: userExist.roles,
+                    token: this.generateToken(userExist.email)
+                }
+            }
+        } catch (error) {
+            throw error;
+        }
+        
+    }
+
+    public generateToken (email: string): string {
+        try {
+            return jwt.sign({user: {email}}, process.env.JWT_SECRET || "secret", 
+                {expiresIn: "1h"});
+
         } catch (error) {
             throw error;
         }
