@@ -29,12 +29,14 @@ class AppointmentService {
 
     public async create(appointmentInput: AppointmentInput): Promise<AppointmentDocument> {
         try {
-            /*
-            const appointmentExists: AppointmentDocument | null = null;
-            if (!appointmentExists) {
-                throw new ReferenceError("Appointment already exists");
+            
+            const appointmentExists: AppointmentDocument | null = await appointmentModel.findOne({
+                date: appointmentInput.date,
+                time: appointmentInput.time
+            });
+            if (appointmentExists !== null) {
+                throw new ReferenceError("Appointment already exists at the same date and time");
             }
-            */
 
             const appointment = await appointmentModel.create(appointmentInput);
             return appointment;
