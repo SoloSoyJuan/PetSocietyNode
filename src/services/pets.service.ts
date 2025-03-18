@@ -42,10 +42,7 @@ class PetsService {
   }
 
   // UPDATE
-  public async update(
-    id: string,
-    petsInput: petsInputUpdate
-  ): Promise<petsDocument | null> {
+  public async update(id: string, petsInput: petsInputUpdate): Promise<petsDocument | null> {
     try {
       // Make sure the pets exists first
       const pets = await this.getById(id);
@@ -75,6 +72,15 @@ class PetsService {
 
       const deletedpets = await petsModel.findByIdAndDelete(id);
       return deletedpets;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getByOwner(owner: string): Promise<petsDocument[]> {
+    try {
+      const pets = await petsModel.find({ owner });
+      return pets;
     } catch (error) {
       throw error;
     }
