@@ -62,6 +62,7 @@ Las historias clínicas tienen relación con una cita, una mascota y un Veterina
 - `jsonwebtoken` → Manejo de autenticación con tokens JWT.
 - `mongodb` → Cliente de MongoDB.
 - `mongoose` → ODM para MongoDB, facilita la interacción con la base de datos.
+- `zod` → validación y definición de esquemas de datos.
 #### Desarrollo
 - `@types/bcrypt` → Tipos para `bcrypt`.
 - `@types/express` → Tipos para `express`.
