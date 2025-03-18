@@ -1,6 +1,6 @@
 
 export interface AppointmentInput {
-    date: string;
+    date: Date;
     time: string;
     doctorId: string;
     petId: string;
@@ -8,7 +8,7 @@ export interface AppointmentInput {
 }
 
 export interface AppointmentUpdateInput {
-    date: string;
+    date: Date;
     time: string;
     doctorId: string;
     petId: string;
