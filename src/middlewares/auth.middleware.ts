@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
-import { AnyZodObject } from 'zod';
 
 export const auth = (req: Request, res: Response, next: NextFunction) => {
     let token: string | undefined =  req.header("Authorization"); 
@@ -23,16 +22,5 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
             return;
         }
         res.status(401).json("Not Authorized");
-    }
-}
-
-export const validateSchema = (schema: AnyZodObject) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            await schema.parseAsync(req.body);
-            next();
-        } catch (error) {
-            res.status(400).json(error);
-        }
     }
 }
