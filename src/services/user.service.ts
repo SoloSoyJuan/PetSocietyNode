@@ -114,7 +114,7 @@ class UserServices {
                     phone: userExist.phone,
                     email: userExist.email,
                     roles: userExist.roles,
-                    token: this.generateToken(userExist.email)
+                    token: this.generateToken(userExist)
                 }
             }
         } catch (error) {
@@ -123,9 +123,14 @@ class UserServices {
         
     }
 
-    public generateToken (email: string): string {
+    public generateToken (user: UserDocument): string {
         try {
-            return jwt.sign({user: {email}}, process.env.JWT_SECRET || "secret", 
+            return jwt.sign({ 
+                user: {
+                    id: user.id,
+                    email: user.email, 
+                    roles: user.roles 
+                }}, process.env.JWT_SECRET || "secret", 
                 {expiresIn: "1h"});
 
         } catch (error) {
