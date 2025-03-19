@@ -66,9 +66,14 @@ Las historias clínicas tienen relación con una cita, una mascota y un Veterina
 #### Desarrollo
 - `@types/bcrypt` → Tipos para `bcrypt`.
 - `@types/express` → Tipos para `express`.
+- `@types/jest` → Tipos para `Jest`.
 - `@types/jsonwebtoken` → Tipos para `jsonwebtoken`.
 - `@types/node` → Tipos para Node.js.
+- `types/supertest` → Tipos para `supertest`.
+- `jest` → Framework de testing para JavaScript y TypeScrip.
 - `nodemon` → Reinicio automático del servidor en desarrollo.
+- `supertest` → Librería para hacer pruebas de endpoints HTTP en Node.js.
+- `ts-jest` → Un preprocesador que permite ejecutar pruebas escritas en TypeScript.
 - `ts-node` → Permite ejecutar TypeScript sin necesidad de compilarlo manualmente.
 - `typescript` → Compilador de TypeScript.
 
@@ -92,4 +97,9 @@ yarn start
 Para ejecutarlo en modo desarrollo con recarga automática:
 ```sh
 yarn dev
+```
+#### Pruebas
+Para las pruebas realizadas en `Jest` se ejecuta el siguiente comando:
+```sh
+yarn test
 ```
