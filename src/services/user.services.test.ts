@@ -1,12 +1,12 @@
 // src/services/user.services.test.ts
-import bycript from 'bcrypt';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { userServices } from './user.service';
 import { UserModel } from '../models';
 import { AuthError } from '../exceptions';
 import { UserInput, UserInputUpdate, UserLogin, UserLoginResponse } from '../interfaces';
 
-// Mocks de bcrypt, jwt y del modelo
+// Mocks for bcrypt, jwt, and the model
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
 jest.mock('../models', () => ({
@@ -26,7 +26,7 @@ describe('UserServices', () => {
   });
 
   describe('create', () => {
-    it('debería crear y retornar un nuevo usuario', async () => {
+    it('should create and return a new user', async () => {
       const plainPassword = 'plainpassword';
       const userInput: UserInput = {
         name: 'Alice',
@@ -38,23 +38,23 @@ describe('UserServices', () => {
         password: plainPassword,
       };
 
-      // Simular que el usuario no existe
+      // Simulate that the user does not exist
       (UserModel.findOne as jest.Mock).mockResolvedValue(null);
-      // Simular el hash de la contraseña
-      (bycript.hash as jest.Mock).mockResolvedValue('hashedpassword');
+      // Simulate the password hash
+      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
       const fakeUser = { id: '1', ...userInput, password: 'hashedpassword' };
       (UserModel.create as jest.Mock).mockResolvedValue(fakeUser);
 
       const result = await userServices.create(userInput);
 
       expect(UserModel.findOne).toHaveBeenCalledWith({ email: userInput.email });
-      // Verificamos que se haya llamado con la contraseña original
-      expect(bycript.hash).toHaveBeenCalledWith(plainPassword, 10);
+      // Verify that bcrypt.hash was called with the original password
+      expect(bcrypt.hash).toHaveBeenCalledWith(plainPassword, 10);
       expect(UserModel.create).toHaveBeenCalledWith({ ...userInput, password: 'hashedpassword' });
       expect(result).toEqual(fakeUser);
     });
 
-    it('debería lanzar ReferenceError si el usuario ya existe', async () => {
+    it('should throw a ReferenceError if the user already exists', async () => {
       const userInput: UserInput = {
         name: 'Alice',
         lastname: 'Smith',
@@ -69,7 +69,7 @@ describe('UserServices', () => {
       await expect(userServices.create(userInput)).rejects.toThrow(ReferenceError);
     });
 
-    it('debería lanzar error si UserModel.create rechaza', async () => {
+    it('should throw an error if UserModel.create rejects', async () => {
       const userInput: UserInput = {
         name: 'Alice',
         lastname: 'Smith',
@@ -81,12 +81,12 @@ describe('UserServices', () => {
       };
 
       (UserModel.findOne as jest.Mock).mockResolvedValue(null);
-      (bycript.hash as jest.Mock).mockResolvedValue('hashedpassword');
+      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
       const error = new Error('DB error');
       (UserModel.create as jest.Mock).mockRejectedValue(error);
       await expect(userServices.create(userInput)).rejects.toThrow(error);
     });
   });
 
-  // Otros bloques de pruebas (getAll, getById, update, delete, login, etc.) pueden agregarse aquí.
+  // Additional tests for getAll, getById, update, delete, login, etc. can be added here.
 });
