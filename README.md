@@ -102,4 +102,5 @@ yarn dev
 Para las pruebas realizadas en `Jest` se ejecuta el siguiente comando:
 ```sh
 yarn test
+yarn coverage
 ```
