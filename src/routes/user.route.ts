@@ -5,11 +5,19 @@ import { userSchema, userUpdateSchema, userLoginSchema } from "../schemas";
 
 export const userRouter = Router();
 
-userRouter.get("/", userController.getAll);
-userRouter.post("/", validateSchema(userSchema), userController.create);
-userRouter.get("/:id", userController.getById);
-userRouter.put("/:id", validateSchema(userUpdateSchema), userController.update);
-userRouter.delete("/:id", userController.delete);
-
-userRouter.post("/login", validateSchema(userLoginSchema), userController.login);
-userRouter.post("/logout", userController.logout);
+userRouter.get("/", 
+    auth(['Admin','Vet']), userController.getAll);
+userRouter.post("/", 
+    auth(['Admin']), 
+    validateSchema(userSchema), userController.create);
+userRouter.get("/:id", 
+    auth(['Admin','Vet']), userController.getById);
+userRouter.put("/:id", 
+    auth(['Admin']), 
+    validateSchema(userUpdateSchema), userController.update);
+userRouter.delete("/:id", 
+    auth(['Admin']), userController.delete);
+userRouter.post("/login", 
+    validateSchema(userLoginSchema), userController.login);
+//userRouter.post("/logout", 
+//    auth(['Admin','Vet','Owner']), userController.logout);

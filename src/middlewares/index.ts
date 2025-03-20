@@ -1,3 +1,2 @@
-export * from './user.middleware';
-export * from './pets.middleware';
-export * from './appointment.middleware';
+export * from './auth.middleware';
+export * from './validateSchema.middleware';
