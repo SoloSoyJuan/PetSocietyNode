@@ -2,7 +2,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { userServices } from './user.service';
-import { UserModel } from '../models';
+import { UserModel, UserDocument } from '../models';
 import { AuthError } from '../exceptions';
 import { UserInput, UserInputUpdate, UserLogin } from '../interfaces';
 
@@ -135,18 +135,30 @@ describe('UserServices', () => {
   describe('login', () => {
     it('returns user info and token on success', async () => {
       const login: UserLogin = { email: 'alice@example.com', password: 'plainpassword' };
-      const fakeUser = {
-        id: '1', name: 'Alice', lastname: 'Smith', email: 'alice@example.com',
-        address: '123 Main St', phone: '1234567890', roles: ['user'], password: 'hashed'
+      const fakeUser = {id: '1', name: 'Alice', lastname: 'Smith', email: 'alice@example.com',
+          address: '123 Main St', phone: '1234567890', roles: ['user'], password: 'hashed'
       };
+      const expectedResponse = {
+          user: {id: '1', name: 'Alice', lastname: 'Smith', email: 'alice@example.com', 
+                address: '123 Main St', phone: '1234567890', roles: ['user'], token: 'token'
+          }
+      };
+
       (UserModel.findOne as jest.Mock).mockResolvedValue(fakeUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       (jwt.sign as jest.Mock).mockReturnValue('token');
 
-      expect(await userServices.login(login)).toEqual({
-        user: { ...fakeUser, token: 'token' }
-      });
-    });
+      const result = await userServices.login(login);
+
+      expect(result).toEqual(expectedResponse);
+      expect(UserModel.findOne).toHaveBeenCalledWith({ email: login.email });
+      expect(bcrypt.compare).toHaveBeenCalledWith(login.password, fakeUser.password);
+      expect(jwt.sign).toHaveBeenCalledWith(
+          { user: { id: fakeUser.id, email: fakeUser.email, roles: fakeUser.roles } },
+          process.env.JWT_SECRET || 'secret',
+          { expiresIn: '1h' }
+      );
+  });
 
     it('throws AuthError if not found', async () => {
       (UserModel.findOne as jest.Mock).mockResolvedValue(null);
