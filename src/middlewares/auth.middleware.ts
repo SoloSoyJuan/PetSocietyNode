@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
 
-export const auth = (req: Request, res: Response, next: NextFunction) => {
+export const auth = (roles: string[]) => (req: Request, res: Response, next: NextFunction) => {
     let token: string | undefined =  req.header("Authorization"); 
 
     if(!token){
@@ -12,15 +12,20 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     try {
         token = token.replace("Bearer ", "");
         const decoded: any = jwt.verify(token, process.env.JWT_SECRET || "secret");
+
         req.body.loggedUser = decoded;
-        console.log(decoded);
-        req.params.id = decoded.user.id;
+
+        if (!decoded || !decoded.user.roles || !roles.some(role => decoded.user.roles.includes(role))) {
+            res.status(403).json("Forbidden");
+            return;
+        }
+        
         next();
     } catch (error) {
         if (error instanceof TokenExpiredError){
             res.status(401).json("Token Expired");
             return;
         }
-        res.status(401).json("Not Authorized");
+        res.status(401).json("Invalid Token");
     }
 }
