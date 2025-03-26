@@ -13,8 +13,6 @@ export const auth = (roles: string[]) => (req: Request, res: Response, next: Nex
         token = token.replace("Bearer ", "");
         const decoded: any = jwt.verify(token, process.env.JWT_SECRET || "secret");
 
-        req.body.loggedUser = decoded;
-
         if (!decoded || !decoded.user.roles || !roles.some(role => decoded.user.roles.includes(role))) {
             res.status(403).json("Forbidden");
             return;
