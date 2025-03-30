@@ -20,7 +20,7 @@ class UserController {
     public async create(req: Request, res: Response): Promise<void> {
         try {
             const newUser = await userServices.create(req.body as UserInput);
-            res.status(201).send(`Create user: ${newUser}`); 
+            res.status(201).json(newUser); 
         } catch (error) {
             if (error instanceof ReferenceError) {
                 res.status(400).json({message: "User already exists"});
