@@ -2,7 +2,7 @@ import { UserDocument } from "../models"
 import { userServices } from "../services"
 import { UserInput } from "../interfaces";
 
-export const resolvers = {
+export const usersResolvers = {
     Query: {
         user: async (_root: any, params: any) => {
             //console.log(params);
@@ -19,8 +19,8 @@ export const resolvers = {
             const userOutput: UserDocument = await userServices.create(params.input as UserInput);
             return userOutput;
         },
-        updateUser: async (_root: any, { id, input }: { id: string; input: Partial<UserInput> }) => {
-            const updatedUser: UserDocument | null = await userServices.update(id,input as UserInput);
+        updateUser: async (_root: any, params: any) => {
+            const updatedUser: UserDocument | null = await userServices.update(params.id,params.input as UserInput);
             if (!updatedUser) {
             throw new Error("User not found")
             }

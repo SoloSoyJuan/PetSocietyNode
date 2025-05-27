@@ -4,8 +4,11 @@ import { db } from './lib/connectionDB';
 import { petsRouter, userRouter, appointmentRouter } from './routes';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware as apolloMiddleware } from '@apollo/server/express4';
-import { readFile } from 'fs/promises';
-import { resolvers } from './graphql/resolvers';
+import { resolvers } from './graphql';
+import { loadFilesSync } from "@graphql-tools/load-files"
+import { mergeTypeDefs } from "@graphql-tools/merge"
+import path, { dirname, join } from "path"
+import { fileURLToPath } from 'url';
 
 // Load environment variables
 dotenv.config();
@@ -17,7 +20,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 // Load GraphQL schema from file
-const typeDefs = await readFile('./src/graphql/schema.graphql', 'utf-8');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const typesArray = loadFilesSync(join(__dirname, "**/*.schema.graphql"))
+export const typeDefs = mergeTypeDefs(typesArray)
 const apolloServer = new ApolloServer({typeDefs, resolvers});
 await apolloServer.start();
 
