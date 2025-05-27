@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt, { TokenExpiredError } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export const auth = (roles: string[]) => (req: Request, res: Response, next: NextFunction) => {
     let token: string | undefined =  req.header("Authorization"); 
@@ -20,7 +20,7 @@ export const auth = (roles: string[]) => (req: Request, res: Response, next: Nex
         
         next();
     } catch (error) {
-        if (error instanceof TokenExpiredError){
+        if (error instanceof jwt.JsonWebTokenError) {
             res.status(401).json("Token Expired");
             return;
         }
